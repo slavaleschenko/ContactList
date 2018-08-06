@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AddContactController" customModule="MyContacts" customModuleProvider="target">
+            <connections>
+                <outlet property="bdayDatePicker" destination="Eu9-BC-1cq" id="4f7-hk-N7z"/>
+                <outlet property="emailTxt" destination="vpi-Cb-hN5" id="tvk-z5-F7E"/>
+                <outlet property="firstNameTxt" destination="fFT-HL-Lfh" id="8ND-dx-iqB"/>
+                <outlet property="lastNameTxt" destination="paw-WS-LbT" id="nMs-8M-JYe"/>
+                <outlet property="view" destination="iN0-l3-epB" id="IKc-9A-IWW"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="First Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fFT-HL-Lfh">
+                    <rect key="frame" x="16" y="58" width="343" height="30"/>
+                    <nil key="textColor"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Last Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="paw-WS-LbT">
+                    <rect key="frame" x="16" y="96" width="343" height="30"/>
+                    <nil key="textColor"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+                <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="Eu9-BC-1cq">
+                    <rect key="frame" x="0.0" y="252" width="375" height="162"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="162" id="dtp-GT-Fc9"/>
+                    </constraints>
+                    <date key="date" timeIntervalSinceReferenceDate="554811659.26749802">
+                        <!--2018-08-01 10:20:59 +0000-->
+                    </date>
+                </datePicker>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="choose contact's birthday" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BEJ-aP-tEw">
+                    <rect key="frame" x="88" y="431" width="199" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Phone number" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="T4c-Wk-gcu">
+                    <rect key="frame" x="16" y="134" width="343" height="30"/>
+                    <nil key="textColor"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="E-mail" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="vpi-Cb-hN5">
+                    <rect key="frame" x="16" y="172" width="343" height="30"/>
+                    <nil key="textColor"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="vpi-Cb-hN5" firstAttribute="top" secondItem="paw-WS-LbT" secondAttribute="bottom" constant="46" id="1d0-BL-Byj"/>
+                <constraint firstItem="Eu9-BC-1cq" firstAttribute="centerX" secondItem="vpi-Cb-hN5" secondAttribute="centerX" id="A5x-ga-X61"/>
+                <constraint firstItem="fFT-HL-Lfh" firstAttribute="leading" secondItem="paw-WS-LbT" secondAttribute="leading" id="Ia1-8Q-7V0"/>
+                <constraint firstItem="fFT-HL-Lfh" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leadingMargin" id="J3K-V4-bDa"/>
+                <constraint firstItem="Eu9-BC-1cq" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="Q99-oc-e3U"/>
+                <constraint firstItem="fFT-HL-Lfh" firstAttribute="trailing" secondItem="paw-WS-LbT" secondAttribute="trailing" id="QOh-uv-xeE"/>
+                <constraint firstItem="fFT-HL-Lfh" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="topMargin" constant="38" id="RWC-MY-zSX"/>
+                <constraint firstItem="fFT-HL-Lfh" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailingMargin" id="Sck-zv-QQM"/>
+                <constraint firstItem="T4c-Wk-gcu" firstAttribute="trailing" secondItem="paw-WS-LbT" secondAttribute="trailing" id="UFo-2q-IOs"/>
+                <constraint firstItem="paw-WS-LbT" firstAttribute="top" secondItem="fFT-HL-Lfh" secondAttribute="bottom" constant="8" symbolic="YES" id="Y70-Yi-G35"/>
+                <constraint firstItem="T4c-Wk-gcu" firstAttribute="top" secondItem="paw-WS-LbT" secondAttribute="bottom" constant="8" symbolic="YES" id="gpG-fb-Ln8"/>
+                <constraint firstItem="paw-WS-LbT" firstAttribute="trailing" secondItem="vpi-Cb-hN5" secondAttribute="trailing" id="hNZ-eA-izT"/>
+                <constraint firstItem="Eu9-BC-1cq" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="kAn-4f-Nds"/>
+                <constraint firstItem="paw-WS-LbT" firstAttribute="leading" secondItem="vpi-Cb-hN5" secondAttribute="leading" id="oej-Zi-t5i"/>
+                <constraint firstItem="T4c-Wk-gcu" firstAttribute="leading" secondItem="paw-WS-LbT" secondAttribute="leading" id="pkG-P7-bjp"/>
+                <constraint firstItem="Eu9-BC-1cq" firstAttribute="centerX" secondItem="BEJ-aP-tEw" secondAttribute="centerX" id="qs3-NW-guB"/>
+                <constraint firstItem="BEJ-aP-tEw" firstAttribute="top" secondItem="Eu9-BC-1cq" secondAttribute="bottom" constant="17" id="sOw-Qh-lfb"/>
+            </constraints>
+            <point key="canvasLocation" x="33.5" y="53.5"/>
+        </view>
+    </objects>
+</document>

@@ -17,14 +17,17 @@ protocol AddContactRouter {
 
 // MARK: - Implementation
 
-private final class AddContactRouterImpl: AddContactRouter {
+private final class AddContactRouterImpl: NavigationRouter, AddContactRouter {
     
 }
 
 // MARK: - Factory
 
 final class AddContactRouterFactory {
-    static func `default`() -> AddContactRouter {
-        return AddContactRouterImpl()
+    static func `default`(
+        navigationController: UINavigationController
+        ) -> AddContactRouter {
+        return AddContactRouterImpl(
+            with: navigationController)
     }
 }

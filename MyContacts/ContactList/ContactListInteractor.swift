@@ -16,12 +16,20 @@ protocol ContactListInteractorOutput: class {}
 
 protocol ContactListInteractor: class {
     var output: ContactListInteractorOutput? { get set }
+    
+    func addContactInteractor() -> AddContactInteractor?
 }
 
 // MARK: - Implementation
 
 private final class ContactListInteractorImpl: ContactListInteractor {
     weak var output: ContactListInteractorOutput?
+    
+    func addContactInteractor() -> AddContactInteractor? {
+        return AddContactInteractorFactory.default()
+    }
+    
+    
 }
 
 // MARK: - Factory

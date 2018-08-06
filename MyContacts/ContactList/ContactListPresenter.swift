@@ -20,6 +20,7 @@ protocol ContactListPresenter: class {
     var output: ContactListPresenterOutput? { get set }
     
     func handleViewIsReady()
+    func handleAddContact()
 }
 
 // MARK: - Implementation
@@ -39,6 +40,13 @@ private final class ContactListPresenterImpl: ContactListPresenter, ContactListI
     
     func handleViewIsReady() {
         
+    }
+    
+    func handleAddContact() {
+        guard let addContactInteractor = interactor.addContactInteractor() else { return }
+        let addContactRouter = router.addContactRouter()
+        let addContactPresenter = AddContactPresenterFactory.default(interactor: addContactInteractor, router: addContactRouter)
+        router.routeToAddContact(presenter: addContactPresenter)
     }
 }
 

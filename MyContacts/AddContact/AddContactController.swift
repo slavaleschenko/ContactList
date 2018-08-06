@@ -8,11 +8,19 @@
 
 import Foundation
 import UIKit
+import Contacts
 
 // MARK: - Implementation
 
 class AddContactController: UIViewController, AddContactPresenterOutput {
     fileprivate let presenter: AddContactPresenter
+    
+    @IBOutlet weak var firstNameTxt: UITextField!
+    @IBOutlet weak var lastNameTxt: UITextField!
+    @IBOutlet weak var emailTxt: UITextField!
+    
+    @IBOutlet weak var bdayDatePicker: UIDatePicker!
+    
     
     init(presenter: AddContactPresenter) {
         self.presenter = presenter
@@ -25,8 +33,38 @@ class AddContactController: UIViewController, AddContactPresenterOutput {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        configureNavigationBar()
         presenter.handleViewIsReady()
+    }
+    
+    @objc func createContact() {
+        let newContact = CNMutableContact()
+        
+        newContact.givenName = firstNameTxt.text!
+        newContact.familyName = lastNameTxt.text!
+        let email = CNLabeledValue(label: CNLabelHome, value: emailTxt.text! as NSString)
+        
+        newContact.emailAddresses = [email]
+        let bday = NSCalendar.current.dateComponents([Calendar.Component.year, Calendar.Component.month, Calendar.Component.day], from: bdayDatePicker.date)
+        
+        newContact.birthday = bday
+        
+        do {
+            let store = CNContactStore()
+            let saveRequest = CNSaveRequest()
+            saveRequest.add(newContact, toContainerWithIdentifier: nil)
+            try store.execute(saveRequest)
+            
+            navigationController?.popViewController(animated: true)
+        }
+        catch {
+            print(error)
+        }
+    }
+    
+    private func configureNavigationBar() {
+        self.title = "Add Contact"
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(createContact))
     }
 }
 

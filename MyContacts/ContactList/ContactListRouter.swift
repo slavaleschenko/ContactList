@@ -12,19 +12,34 @@ import UIKit
 // MARK: - Protocol
 
 protocol ContactListRouter {
+    func addContactRouter() -> AddContactRouter
+    func routeToAddContact(presenter: AddContactPresenter)
     
 }
 
 // MARK: - Implementation
 
-private final class ContactListRouterImpl: ContactListRouter {
+private final class ContactListRouterImpl: NavigationRouter, ContactListRouter {
+    func routeToAddContact(presenter: AddContactPresenter) {
+        let controller = AddContactControllerFactory.new(presenter: presenter)
+        navigationController.pushViewController(controller, animated: true)
+    }
+    
+    func addContactRouter() -> AddContactRouter {
+        return AddContactRouterFactory.default(navigationController: navigationController)
+    }
+    
     
 }
 
 // MARK: - Factory
 
 final class ContactListRouterFactory {
-    static func `default`() -> ContactListRouter {
-        return ContactListRouterImpl()
+    static func `default`(
+        navigationController: UINavigationController
+        ) -> ContactListRouter {
+        return ContactListRouterImpl(
+            with: navigationController
+        )
     }
 }

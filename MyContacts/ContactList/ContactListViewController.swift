@@ -10,13 +10,14 @@ import UIKit
 import Contacts
 import ContactsUI
 
-class ContactListViewController: UITableViewController, ContactListPresenterOutput {
+class ContactListViewController: UIViewController, ContactListPresenterOutput {
     
     fileprivate let presenter: ContactListPresenter
+    @IBOutlet weak var tableView: UITableView!
     
     init(presenter: ContactListPresenter) {
         self.presenter = presenter
-        super.init(nibName: nil, bundle: nil)
+        super.init(nibName: ContactListViewController.className, bundle: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -27,137 +28,108 @@ class ContactListViewController: UITableViewController, ContactListPresenterOutp
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        getAccessToPhoneAddresBook()
-//        tableView.reloadData()
-        presenter.handleViewIsReady()
-    }
-
-    func getAccessToPhoneAddresBook() {
-        let status = CNContactStore.authorizationStatus(for: .contacts)
-        if status == .denied || status == .restricted {
-            presentSettingsActionSheet()
-            return
-        }
         
-        // open it
-        
-        let store = CNContactStore()
-        store.requestAccess(for: .contacts) { granted, error in
-            guard granted else {
-                DispatchQueue.main.async {
-                    self.presentSettingsActionSheet()
-                }
-                return
-            }
-            
-            // get the contacts
-           
-//            var contacts = [CNContact]()
-            let request = CNContactFetchRequest(keysToFetch: [CNContactIdentifierKey as NSString, CNContactFormatter.descriptorForRequiredKeys(for: .fullName)])
-            do {
-                try store.enumerateContacts(with: request) { contact, stop in
-                    self.contacts.append(contact)
-                    
-                }
-            } catch {
-                print(error)
-            }
-            
-            // do something with the contacts array (e.g. print the names)
-            
-            let formatter = CNContactFormatter()
-            formatter.style = .fullName
-            
-            for contact in self.contacts {
-                print(formatter.string(from: contact) ?? "???")
-            }
+        presentSettingsActionSheet()
+        fetchContacts(completion: {contacts in
+            self.contacts = contacts
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
+        })
+        configureNavigationBar()
+        configureTableView()
+    }
+    
+    func fetchContacts(completion: @escaping (_ result: [CNContact]) -> Void) {
+        DispatchQueue.main.async {
+
+            var results = [CNContact]()
+            let keys = [CNContactGivenNameKey,CNContactFamilyNameKey,CNContactMiddleNameKey,CNContactEmailAddressesKey,CNContactPhoneNumbersKey] as [CNKeyDescriptor]
+            let fetchRequest = CNContactFetchRequest(keysToFetch: keys)
+            fetchRequest.sortOrder = .userDefault
+            let store = CNContactStore()
+            store.requestAccess(for: .contacts, completionHandler: {(grant,error) in
+                if grant{
+                    do {
+                        try store.enumerateContacts(with: fetchRequest, usingBlock: { (contact, stop) -> Void in
+                            results.append(contact)
+                        })
+                    }
+                    catch let error {
+                        print(error.localizedDescription)
+                    }
+                    completion(results)
+                }else{
+                    print("Error \(error?.localizedDescription ?? "")")
+                }
+            })
         }
     }
     
+
     func presentSettingsActionSheet() {
-        let alert = UIAlertController(title: "Permission to Contacts", message: "This app needs access to contacts in order to ...", preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "Go to Settings", style: .default) { _ in
-            let url = URL(string: UIApplicationOpenSettingsURLString)!
-            UIApplication.shared.open(url)
-        })
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        present(alert, animated: true)
+        let status : CNAuthorizationStatus = CNContactStore.authorizationStatus(for: CNEntityType.contacts)
+        switch status {
+        case .authorized:
+            return
+        case .notDetermined:
+            return
+        default:
+            let alert = UIAlertController(title: "Permission to Contacts", message: "This app needs access to contacts", preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "Go to Settings", style: .default) { _ in
+                let url = URL(string: UIApplicationOpenSettingsURLString)!
+                UIApplication.shared.open(url)
+            })
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            present(alert, animated: true)
+        }
     }
     
-  
+    private func configureTableView() {
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.register(ContactCell.nib(), forCellReuseIdentifier: ContactCell.reuseIdentifier())
+    }
     
+    private func configureNavigationBar() {
+        self.title = "Contacts"
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addContact))
+    }
+    
+    @objc fileprivate func addContact() {
+        presenter.handleAddContact()
+    }
+    
+}
     
     // MARK: - Table view data source
-
+extension ContactListViewController: UITableViewDataSource {
+    
 //    override func numberOfSections(in tableView: UITableView) -> Int {
 //        // #warning Incomplete implementation, return the number of sections
 //        return contacts.count
 //    }
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return contacts.count
     }
 
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ContactCell", for: indexPath) as! ContactCell
-        let currentContact = contacts[indexPath.row]
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        cell.name.text = "\(currentContact.givenName) \(currentContact.familyName)"
-
+        let cell = tableView.dequeueReusableCell(withIdentifier: ContactCell.reuseIdentifier(), for: indexPath) as! ContactCell
+        let currentContact = contacts[indexPath.row]
+        cell.contactName.text = "\(currentContact.givenName) \(currentContact.familyName)"
+        cell.contactPhone.text = currentContact.phoneNumbers.first?.value.stringValue
         return cell
     }
+}
+
+    // MARK: - Table view delegate
+
+extension ContactListViewController: UITableViewDelegate {
     
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
 
 // MARK: - Factory
