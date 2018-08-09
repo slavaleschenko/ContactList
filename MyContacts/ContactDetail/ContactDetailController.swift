@@ -8,11 +8,17 @@
 
 import Foundation
 import UIKit
+import Contacts
 
 // MARK: - Implementation
 
 class ContactDetailController: UIViewController, ContactDetailPresenterOutput {
     fileprivate let presenter: ContactDetailPresenter
+    var contact = [CNContact]()
+    
+    @IBOutlet weak var firstName: UILabel!
+    @IBOutlet weak var lastName: UILabel!
+    @IBOutlet weak var age: UILabel!
     
     init(presenter: ContactDetailPresenter) {
         self.presenter = presenter
@@ -27,7 +33,24 @@ class ContactDetailController: UIViewController, ContactDetailPresenterOutput {
         super.viewDidLoad()
         
         presenter.handleViewIsReady()
+        showContactDetails()
     }
+    
+    func showContactDetails() {
+        DispatchQueue.main.async {
+            let selectedContact = self.presenter.tappedContact()
+//            self.contact.append(selectedContact.first!)
+        }
+//        contact.append(selectedContact.first!)
+        firstName.text = contact.first?.givenName
+        lastName.text = contact.first?.familyName
+        if contact.first?.birthday?.date == nil {
+            age.isHidden = true
+        } else {
+            age.text = "fix age!!!"
+        }
+    }
+    
 }
 
 // MARK: - Factory

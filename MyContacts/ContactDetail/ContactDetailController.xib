@@ -11,6 +11,9 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ContactDetailController" customModule="MyContacts" customModuleProvider="target">
             <connections>
+                <outlet property="age" destination="REr-tk-RHG" id="BoP-Ry-FlS"/>
+                <outlet property="firstName" destination="Ahk-Fd-i17" id="7Gi-1i-LaZ"/>
+                <outlet property="lastName" destination="dTp-ca-5wF" id="jbb-Pl-hDf"/>
                 <outlet property="view" destination="iN0-l3-epB" id="N5r-ie-D4B"/>
             </connections>
         </placeholder>

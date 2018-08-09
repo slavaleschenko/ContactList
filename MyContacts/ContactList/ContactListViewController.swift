@@ -129,6 +129,11 @@ extension ContactListViewController: UITableViewDataSource {
     // MARK: - Table view delegate
 
 extension ContactListViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        presenter.handleContactDetail(contact: contacts[indexPath.row])
+    }
     
 }
 

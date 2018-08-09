@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Contacts
 
 // MARK: - Output
 
@@ -18,6 +19,7 @@ protocol ContactListInteractor: class {
     var output: ContactListInteractorOutput? { get set }
     
     func addContactInteractor() -> AddContactInteractor?
+    func contactDetailInteractor(contact: CNContact) -> ContactDetailInteractor?
 }
 
 // MARK: - Implementation
@@ -29,6 +31,10 @@ private final class ContactListInteractorImpl: ContactListInteractor {
         return AddContactInteractorFactory.default()
     }
     
+    func contactDetailInteractor(contact: CNContact) -> ContactDetailInteractor? {
+        
+        return ContactDetailInteractorFactory.default(contact: contact)
+    }
     
 }
 

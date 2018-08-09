@@ -15,6 +15,9 @@ protocol ContactListRouter {
     func addContactRouter() -> AddContactRouter
     func routeToAddContact(presenter: AddContactPresenter)
     
+    func contactDetailRouter() -> ContactDetailRouter
+    func routeToContactDetail(presenter: ContactDetailPresenter)
+    
 }
 
 // MARK: - Implementation
@@ -29,6 +32,15 @@ private final class ContactListRouterImpl: NavigationRouter, ContactListRouter {
         return AddContactRouterFactory.default(navigationController: navigationController)
     }
     
+    func contactDetailRouter() -> ContactDetailRouter {
+        return ContactDetailRouterFactory.default(navigationController: navigationController)
+    }
+    
+    
+    func routeToContactDetail(presenter: ContactDetailPresenter) {
+        let controller = ContactDetailControllerFactory.new(presenter: presenter)
+        navigationController.pushViewController(controller, animated: true)
+    }
     
 }
 

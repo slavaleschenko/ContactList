@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Contacts
 
 // MARK: - Output
 
@@ -21,6 +22,7 @@ protocol ContactListPresenter: class {
     
     func handleViewIsReady()
     func handleAddContact()
+    func handleContactDetail(contact: CNContact)
 }
 
 // MARK: - Implementation
@@ -47,6 +49,13 @@ private final class ContactListPresenterImpl: ContactListPresenter, ContactListI
         let addContactRouter = router.addContactRouter()
         let addContactPresenter = AddContactPresenterFactory.default(interactor: addContactInteractor, router: addContactRouter)
         router.routeToAddContact(presenter: addContactPresenter)
+    }
+    
+    func handleContactDetail(contact: CNContact) {
+        guard let contactDetailInteractor = interactor.contactDetailInteractor(contact: contact) else { return }
+        let contactDetailRouter = router.contactDetailRouter()
+        let contactDetailPresenter = ContactDetailPresenterFactory.default(interactor: contactDetailInteractor, router: contactDetailRouter)
+        router.routeToContactDetail(presenter: contactDetailPresenter)
     }
 }
 

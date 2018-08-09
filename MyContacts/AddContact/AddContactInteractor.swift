@@ -8,6 +8,7 @@
 
 import Foundation
 
+
 // MARK: - Output
 
 protocol AddContactInteractorOutput: class {}
@@ -30,4 +31,5 @@ final class AddContactInteractorFactory {
     static func `default`() -> AddContactInteractor {
         return AddContactInteractorImpl()
     }
+    
 }
