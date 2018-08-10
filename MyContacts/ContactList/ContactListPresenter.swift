@@ -41,7 +41,7 @@ private final class ContactListPresenterImpl: ContactListPresenter, ContactListI
     }
     
     func handleViewIsReady() {
-        
+        interactor.fetchContacts()
     }
     
     func handleAddContact() {

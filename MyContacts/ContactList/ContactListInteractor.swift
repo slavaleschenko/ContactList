@@ -18,6 +18,7 @@ protocol ContactListInteractorOutput: class {}
 protocol ContactListInteractor: class {
     var output: ContactListInteractorOutput? { get set }
     
+    func fetchContacts()
     func addContactInteractor() -> AddContactInteractor?
     func contactDetailInteractor(contact: CNContact) -> ContactDetailInteractor?
 }
@@ -26,9 +27,20 @@ protocol ContactListInteractor: class {
 
 private final class ContactListInteractorImpl: ContactListInteractor {
     weak var output: ContactListInteractorOutput?
+    private let contactServices: ContactServices
+    
+    
+    
+    init(contactServices: ContactServices) {
+        self.contactServices = contactServices
+    }
+    
+    func fetchContacts() {
+        contactServices.fetchAllContacts()
+    }
     
     func addContactInteractor() -> AddContactInteractor? {
-        return AddContactInteractorFactory.default()
+        return AddContactInteractorFactory.default(contactServices: contactServices)
     }
     
     func contactDetailInteractor(contact: CNContact) -> ContactDetailInteractor? {
@@ -41,7 +53,7 @@ private final class ContactListInteractorImpl: ContactListInteractor {
 // MARK: - Factory
 
 final class ContactListInteractorFactory {
-    static func `default`() -> ContactListInteractor {
-        return ContactListInteractorImpl()
+    static func `default`(contactServices: ContactServices = ContactServicesFactory.default()) -> ContactListInteractor {
+        return ContactListInteractorImpl(contactServices: contactServices)
     }
 }

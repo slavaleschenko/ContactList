@@ -29,6 +29,7 @@ class ContactListViewController: UIViewController, ContactListPresenterOutput {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        presenter.handleViewIsReady()
         presentSettingsActionSheet()
         fetchContacts(completion: {contacts in
             self.contacts = contacts
@@ -41,6 +42,8 @@ class ContactListViewController: UIViewController, ContactListPresenterOutput {
     }
     
     func fetchContacts(completion: @escaping (_ result: [CNContact]) -> Void) {
+        
+        
         DispatchQueue.main.async {
 
             var results = [CNContact]()

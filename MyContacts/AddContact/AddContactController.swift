@@ -34,32 +34,46 @@ class AddContactController: UIViewController, AddContactPresenterOutput {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavigationBar()
-        presenter.handleViewIsReady()
+    }
+    
+    func contactDidUpdate() {
+        navigationController?.popViewController(animated: true)
+        
     }
     
     @objc func createContact() {
-        let newContact = CNMutableContact()
-        
-        newContact.givenName = firstNameTxt.text!
-        newContact.familyName = lastNameTxt.text!
-        let email = CNLabeledValue(label: CNLabelHome, value: emailTxt.text! as NSString)
-        
-        newContact.emailAddresses = [email]
+        guard let firstName = firstNameTxt.text,
+              let lastName = lastNameTxt.text
+        else { return print("some fieald missing")}
+        let email = emailTxt.text! as NSString
         let bday = NSCalendar.current.dateComponents([Calendar.Component.year, Calendar.Component.month, Calendar.Component.day], from: bdayDatePicker.date)
-        
-        newContact.birthday = bday
-        
-        do {
-            let store = CNContactStore()
-            let saveRequest = CNSaveRequest()
-            saveRequest.add(newContact, toContainerWithIdentifier: nil)
-            try store.execute(saveRequest)
-            
-            navigationController?.popViewController(animated: true)
-        }
-        catch {
-            print(error)
-        }
+        presenter.getData(firstName: firstName, lastName: lastName, email: email)
+        presenter.createContact()
+
+//        passDataToPresenter(firstName: firstName)
+//        presenter.createContact()
+//        let newContact = CNMutableContact()
+//
+//        newContact.givenName = firstNameTxt.text!
+//        newContact.familyName = lastNameTxt.text!
+//        let email = CNLabeledValue(label: CNLabelHome, value: emailTxt.text! as NSString)
+//
+//        newContact.emailAddresses = [email]
+//        let bday = NSCalendar.current.dateComponents([Calendar.Component.year, Calendar.Component.month, Calendar.Component.day], from: bdayDatePicker.date)
+//
+//        newContact.birthday = bday
+//
+//        do {
+//            let store = CNContactStore()
+//            let saveRequest = CNSaveRequest()
+//            saveRequest.add(newContact, toContainerWithIdentifier: nil)
+//            try store.execute(saveRequest)
+//
+//            navigationController?.popViewController(animated: true)
+//        }
+//        catch {
+//            print(error)
+//        }
     }
     
     private func configureNavigationBar() {
