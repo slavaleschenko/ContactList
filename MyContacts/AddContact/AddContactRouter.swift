@@ -12,7 +12,6 @@ import UIKit
 // MARK: - Protocol
 
 protocol AddContactRouter {
-    
 }
 
 // MARK: - Implementation

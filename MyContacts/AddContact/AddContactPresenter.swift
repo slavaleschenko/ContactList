@@ -10,6 +10,11 @@ import Foundation
 import Contacts
 // MARK: - Output
 
+protocol AddContactOutput: class {
+    func didCreateContact(contact: NewContact)
+}
+
+
 protocol AddContactPresenterOutput: class {
     func contactDidUpdate()
 }
@@ -19,8 +24,9 @@ protocol AddContactPresenterOutput: class {
 protocol AddContactPresenter: class {
     var output: AddContactPresenterOutput? { get set }
     
-    func createContact()
-    func getData(firstName: String, lastName: String, email: NSString)
+    func handle(firstName: String)
+    func handle(lastName: String)
+    func handleSave()
     
     var newContact : CNMutableContact {get set}
 }
@@ -31,6 +37,7 @@ private final class AddContactPresenterImpl: AddContactPresenter, AddContactInte
     private let interactor: AddContactInteractor
     private let router: AddContactRouter
     weak var output: AddContactPresenterOutput?
+    weak var addContactOutput: AddContactOutput?
     
     var newContact = CNMutableContact()
     
@@ -42,19 +49,16 @@ private final class AddContactPresenterImpl: AddContactPresenter, AddContactInte
         self.router = router
     }
     
-    
-    func getData(firstName: String, lastName: String, email: NSString) {
-        newContact.givenName = firstName
-        newContact.familyName = lastName
-        let contactEmail = CNLabeledValue(label: CNLabelHome, value: email)
-        newContact.emailAddresses = [contactEmail]
+    func handle(lastName: String) {
+        interactor.handle(lastName: lastName)
     }
     
-    func createContact() {
-        interactor.createContact(contact: newContact)
+    func handle(firstName: String) {
+        interactor.handle(firstName: firstName)
     }
     
-    func contactDidSave() {
+    func handleSave() {
+        addContactOutput?.didCreateContact(contact: interactor.createNewContact())
         self.output?.contactDidUpdate()
     }
 }

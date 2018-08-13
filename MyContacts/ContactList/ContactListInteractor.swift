@@ -11,7 +11,9 @@ import Contacts
 
 // MARK: - Output
 
-protocol ContactListInteractorOutput: class {}
+protocol ContactListInteractorOutput: class {
+    func contactDidUpdate()
+}
 
 // MARK: - Protocol
 
@@ -21,6 +23,8 @@ protocol ContactListInteractor: class {
     func fetchContacts()
     func addContactInteractor() -> AddContactInteractor?
     func contactDetailInteractor(contact: CNContact) -> ContactDetailInteractor?
+    
+    func add(contact: NewContact)
 }
 
 // MARK: - Implementation
@@ -44,8 +48,18 @@ private final class ContactListInteractorImpl: ContactListInteractor {
     }
     
     func contactDetailInteractor(contact: CNContact) -> ContactDetailInteractor? {
-        
         return ContactDetailInteractorFactory.default(contact: contact)
+    }
+    
+    func add(contact: NewContact) {
+        let newContact = CNMutableContact()
+        
+        newContact.givenName = contact.firstName
+        newContact.familyName = contact.lastName
+        
+        self.contactServices.saveContact(contact: newContact)
+        
+        output?.contactDidUpdate()
     }
     
 }

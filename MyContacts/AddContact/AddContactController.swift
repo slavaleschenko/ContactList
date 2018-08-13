@@ -13,7 +13,7 @@ import Contacts
 // MARK: - Implementation
 
 class AddContactController: UIViewController, AddContactPresenterOutput {
-    fileprivate let presenter: AddContactPresenter
+  
     
     @IBOutlet weak var firstNameTxt: UITextField!
     @IBOutlet weak var lastNameTxt: UITextField!
@@ -21,6 +21,7 @@ class AddContactController: UIViewController, AddContactPresenterOutput {
     
     @IBOutlet weak var bdayDatePicker: UIDatePicker!
     
+    fileprivate let presenter: AddContactPresenter
     
     init(presenter: AddContactPresenter) {
         self.presenter = presenter
@@ -40,46 +41,34 @@ class AddContactController: UIViewController, AddContactPresenterOutput {
         navigationController?.popViewController(animated: true)
         
     }
-    
-    @objc func createContact() {
-        guard let firstName = firstNameTxt.text,
-              let lastName = lastNameTxt.text
-        else { return print("some fieald missing")}
-        let email = emailTxt.text! as NSString
-        let bday = NSCalendar.current.dateComponents([Calendar.Component.year, Calendar.Component.month, Calendar.Component.day], from: bdayDatePicker.date)
-        presenter.getData(firstName: firstName, lastName: lastName, email: email)
-        presenter.createContact()
-
-//        passDataToPresenter(firstName: firstName)
-//        presenter.createContact()
-//        let newContact = CNMutableContact()
-//
-//        newContact.givenName = firstNameTxt.text!
-//        newContact.familyName = lastNameTxt.text!
-//        let email = CNLabeledValue(label: CNLabelHome, value: emailTxt.text! as NSString)
-//
-//        newContact.emailAddresses = [email]
-//        let bday = NSCalendar.current.dateComponents([Calendar.Component.year, Calendar.Component.month, Calendar.Component.day], from: bdayDatePicker.date)
-//
-//        newContact.birthday = bday
-//
-//        do {
-//            let store = CNContactStore()
-//            let saveRequest = CNSaveRequest()
-//            saveRequest.add(newContact, toContainerWithIdentifier: nil)
-//            try store.execute(saveRequest)
-//
-//            navigationController?.popViewController(animated: true)
-//        }
-//        catch {
-//            print(error)
-//        }
+    @objc func saveButtonDidTap() {
+        firstNameTxt.resignFirstResponder()
+        lastNameTxt.resignFirstResponder()
+        
+        presenter.handleSave()
     }
     
     private func configureNavigationBar() {
         self.title = "Add Contact"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(createContact))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveButtonDidTap))
     }
+}
+
+// MARK: - UITextFieldDelegate extension
+
+extension AddContactController: UITextFieldDelegate {
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        switch textField {
+        case firstNameTxt:
+            presenter.handle(firstName: textField.text ?? "")
+        case lastNameTxt:
+            presenter.handle(lastName: textField.text ?? "")
+        default: break
+        }
+        
+    }
+    
 }
 
 // MARK: - Factory

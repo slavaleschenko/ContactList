@@ -12,7 +12,7 @@ import Contacts
 // MARK: - Output
 
 protocol ContactListPresenterOutput: class {
-    
+    func dataDidUpdate()
 }
 
 // MARK: - Protocol
@@ -57,7 +57,21 @@ private final class ContactListPresenterImpl: ContactListPresenter, ContactListI
         let contactDetailPresenter = ContactDetailPresenterFactory.default(interactor: contactDetailInteractor, router: contactDetailRouter)
         router.routeToContactDetail(presenter: contactDetailPresenter)
     }
+    
+    func updateContactList() {
+        output?.dataDidUpdate()
+    }
+    func contactDidUpdate() {
+        updateContactList()
+    }
 }
+
+extension ContactListPresenterImpl: AddContactOutput {
+    func didCreateContact(contact: NewContact) {
+        interactor.add(contact: contact)
+    }
+}
+
 
 // MARK: - Factory
 

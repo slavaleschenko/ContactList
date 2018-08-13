@@ -88,6 +88,15 @@ class ContactListViewController: UIViewController, ContactListPresenterOutput {
         }
     }
     
+    func dataDidUpdate() {
+        fetchContacts(completion: {contacts in
+            self.contacts = contacts
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        })
+    }
+    
     private func configureTableView() {
         tableView.dataSource = self
         tableView.delegate = self
@@ -108,13 +117,8 @@ class ContactListViewController: UIViewController, ContactListPresenterOutput {
     // MARK: - Table view data source
 extension ContactListViewController: UITableViewDataSource {
     
-//    override func numberOfSections(in tableView: UITableView) -> Int {
-//        // #warning Incomplete implementation, return the number of sections
-//        return contacts.count
-//    }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
         return contacts.count
     }
 
